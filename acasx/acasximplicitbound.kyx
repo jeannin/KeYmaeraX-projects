@@ -3,6 +3,10 @@ SharedDefinitions.
   R abs(R).
   R max(R, R).
   R min(R, R).
+  
+  /* velocity bound 1 = lower, -1 = upper */
+  R wUp() = (-1).
+  R wLo() = (1).
 
   R maxI(R w, R dhf, R dhd) = ( max(0, w * (dhf - dhd)) ).
   R maxIM(R w, R dhfM, R dhd) = ( max((0,w*(dhfM-dhd))) ).
