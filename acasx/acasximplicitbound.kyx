@@ -693,13 +693,10 @@ implyR('R); equivR('R);
         print({`Show cut`})
       )
     )
-
-
-
-
-
 )
 
+
+/* Below is the old tactic from the old proof. Update in progress.
 val tactic = implyR('R) & equivR('R) & Idioms.<(
   dT("Case ->") &
     (allR('R)*) & dT("After Case -> skolemize") & implyR('R)  &
@@ -861,5 +858,6 @@ val tactic = implyR('R) & equivR('R) & Idioms.<(
     ))
   )
 )
+*/
 
 End.
