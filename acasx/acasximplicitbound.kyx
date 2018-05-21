@@ -700,7 +700,7 @@ implyR('R); equivR('R);
     print({`<- unlimited time lower equiv`});
     /*ACASX_Bounded_TimeLowerA*/
   )
-    
+
 )
 
 
