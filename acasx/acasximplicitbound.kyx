@@ -697,11 +697,36 @@ implyR('R); equivR('R);
   print({`<-`});
   cut({`tl<0 | tl>=0`});
   <(
-    print({`<- unlimited time lower equiv`});
-    /*ACASX_Bounded_TimeLowerA*/
+    orL('L=={`tl<0 | tl>=0`});
+    <(
+      print({`tl<0`});
+      print({`<- unlimited time lower equiv`});
+        /*ACASX_Bounded_TimeLowerA*/
+        /*lweqvA*/
+      ,
+      print({`tl>=0`});
+      cut({`tl-to<0 | tl-to>=0`});
+      <(
+        orL('L=={`tl-to<0 | tl-to>=0`});
+        <(
+          print({`tl>=0 Case tl-to<0`});
+            QE
+          ,
+          print({`tl>=0 Case tl-to>=0`});
+            /*ACASX_Bounded_TImeLowerB*/
+            /*lqeqvA*/
+        )
+        ,
+        print({`Show cut`});
+      )
+    )
+    ,
+    print({`Show cut`});
   )
 
 )
+
+End.
 
 
 /* Below is the old tactic from the old proof. Update in progress.
@@ -769,5 +794,3 @@ implyR('R); equivR('R);
   )
 )
 */
-
-End.
