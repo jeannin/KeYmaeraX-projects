@@ -793,4 +793,179 @@ End.
     ))
   )
 )
+
+
+def allTRoHoL(caseName: String, tInst: String, roInst: String, hoInst: String): BelleExpr =
+  dT(caseName) &
+  allL("t".asVariable, tInst.asTerm)('L) &
+  allL("ro".asVariable, roInst.asTerm)('L) &
+  allL("ho".asVariable, hoInst.asTerm)('L) &
+  dT(s"$caseName Inst")
+
+
+
+def lweqvA(b:BelleExpr,s:BelleExpr,v:BelleExpr)
+
+abbrv({`max((0,w*(dhf-dhd))`}, {`maxA`});
+minmax('L=={`max(0,w*(dhf-dhd))`});
+andR('R);
+<(
+  implyR('R); andR('R);
+  <(
+    print({`<- 1`}); minmax('R=={`min(0,w*dhd)`}); implyR('R); (andL('L)*); cut({`rv=0 | rv>0`});
+    <(
+      orL('L={`rv=0 | rv>0`});
+      <(
+        print({`<- 1:rv=0`});
+          /*allTRoHoL("<- 1:rv=0", "0", "rv*0", "w*a/2*0^2+dhd*0") & b*/
+          allL( {`0`}, 'L);
+          allL( {`rv*0`}, 'L);
+          allL( {`w*a/2*0^2+dhd*0`}, 'L);
+          /*b*/
+        ,
+        print({`<- 1:rv>0`});
+          /*allTRoHoL("<- 1:rv>0", "(r+rp)/rv", "rv*((r+rp)/rv)", "w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)") & b/*d*/*/
+          allL( {`(r+rp)/rv`}, 'L);
+          allL( {`rv*((r+rp)/rv)`}, 'L);
+          allL( {`w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)`}, 'L);
+          /*b*/
+      )
+      ,
+      print({`Show cut`})
+    )
+    ,
+    andR('R);
+    <(
+      print({`<- 2`});
+      abbrv({`min((0,w*dhd))`}, {`minA`});
+      minmax('L=={`min((0,w*dhd))`});
+      implyR('R); (andL('L)*);
+      cut({`rv=0 | rv>0`});
+      <(
+        orL('L=={`rv=0 | rv>0`});
+        <(
+          print({`<- 2:rv=0`});
+            /*allTRoHoL("<- 2:rv=0", "-minA/a", "rv*(-minA/a)", "w*a/2*(-minA/a)^2+dhd*(-minA/a)") & b*/
+            allL( {`-minA/a`}, 'L);
+            allL( {`rv*(-minA/a)`}, 'L);
+            allL( {`w*a/2*(-minA/a)^2+dhd*(-minA/a)`}, 'L);
+            /*b*/
+          ,
+          print({`<- 2:rv>0`});
+            /*allTRoHoL("<- 2:rv>0", "-minA/a", "rv*(-minA/a)", "w*a/2*(-minA/a)^2+dhd*(-minA/a)") & b*/
+            allL( {`-minA/a`}, 'L);
+            allL( {`rv*(-minA/a)`}, 'L);
+            allL( {`w*a/2*(-minA/a)^2+dhd*(-minA/a)`}, 'L);
+            /*b*/
+        )
+        ,
+        print({`Show cut`});
+      )
+      ,
+      andR('R);
+      <(
+        print({`<- 3`}); minmax('R=={`min(0,w*dhd)`}); implyR('R); (andL('L)*);
+        cut({`rv=0 | rv>0`});
+        <(
+          orL('L=={`rv=0 | rv>0`});
+          <(
+            print({`<- 3:rv=0`});
+              /*allTRoHoL("<- 3:rv=0", "0", "rv*0", "w*a/2*0^2+dhd*0") & b*/
+              allL( {`0`}, 'L);
+              allL( {`rv*0`}, 'L);
+              allL( {`w*a/2*0^2+dhd*0`}, 'L);
+              /*b*/
+            ,
+            print({`<- 3:rv>0`});
+              /*allTRoHoL("<- 3:rv>0", "(r-rp)/rv", "rv*((r-rp)/rv)", "w*a/2*((r-rp)/rv)^2+dhd*((r-rp)/rv)") & b*/
+              allL( {`(r-rp)/rv`}, 'L);
+              allL( {`rv*((r-rp)/rv)`}, 'L);
+              allL( {`w*a/2*((r-rp)/rv)^2+dhd*((r-rp)/rv)`}, 'L);
+              /*b*/
+          )
+          ,
+          print({`Show cut`});
+        )
+        ,
+        print({`<- 4`}); implyR('R); cut({`rv=0 | rv>0`});
+        <(
+          orL('L=={`rv=0 | rv>0`});
+          <(
+            print({`<- 4:rv=0`});
+              closeTrue;
+            ,
+            print({`<- 4:rv>0`});
+              /*allTRoHoL("<- 4:rv>0", "(r-rp)/rv", "rv*((r-rp)/rv)", "dhf*((r-rp)/rv)-w*maxA^2/(2*a)") & b/*n*/*/
+              allL( {`(r-rp)/rv`}, 'L);
+              allL( {`rv*((r-rp)/rv)`}, 'L);
+              allL( {`dhf*((r-rp)/rv)-w*maxA^2/(2*a)`}, 'L);
+              /*b*/
+          )
+          ,
+          print({`Show cut`});
+        )
+      )
+    )
+  )
+  ,
+  implyR('R); andR('R);
+  <(
+    print({`<- 5`}); implyR('R);
+    cut({`rv=0 | rv>0`});
+    <(
+      orL('L=={`rv=0 | rv>0`});
+      <(
+        print({`<- 5:rv=0`});
+          /*allTRoHoL("<- 5:rv=0", "0", "0", "0") & b*/
+          allL( {`0`}, 'L);
+          allL( {`0`}, 'L);
+          allL( {`0`}, 'L);
+          /*b*/
+        ,
+        print('L=={`<- 5:rv>0`});
+          /*allTRoHoL("<- 5:rv>0", "(r+rp)/rv", "rv*((r+rp)/rv)", "w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)") & b*/
+          allL( {`(r+rp)/rv`}, 'L);
+          allL( {`rv*((r+rp)/rv)`}, 'L);
+          allL( {`w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)`}, 'L);
+          /*b*/
+      )
+      ,
+      print({`Show cut`});
+    )
+    ,
+    print({`<- 6`});
+    cut({`rv=0 | rv>0`});
+    <(
+      orL('L=={`rv=0 | rv>0`});
+      <(
+        print({`<- 6:rv=0`});
+          cut({`r>rp | r <= rp`});
+          <(
+            orL('L=={`r>rp | r <= rp`});
+            <(
+              closeT
+              ,
+              /*s*/
+            )
+          )
+        ,
+        print({`<- 6:rv>0`});
+        /*v*/
+      )
+      ,
+      print({`Show cut`});
+    )
+  )
+)
+
+
+
+
+
+
+
+
+
+
+
 */
