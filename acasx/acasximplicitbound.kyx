@@ -219,6 +219,214 @@ End.
 
 Tactic "prove Theorem 4: correctness of upper bound".
 
+print({`lemma Up`}) ; implyR('R) ; andL('L)* ;
+print({`Before skolem Up`}) ; allR('R)* ; print({`After skolem Up`}) ;
+implyR('R) ; orR('R) ;
+allL({`t_+t`}, 'L) ;
+allL({`rv*(t_+t)`}, 'L) ;
+abbrv({`max((0,w*(dhfM-dhd)))`}, {`maxIM`}) ;
+cut({`0<=t_+t&t_+t < maxIM/aM|t_+t>=maxIM/aM`}) ; <(
+print({`Use cut`}) ;
+orL('L=={`0<=t_+t&t_+t < maxIM/aM|t_+t>=maxIM/aM`}) ; <(
+  print({`final time in parabola`}) ;
+  allL({`w*aM/2*(t_+t)^2+dhd*(t_+t)`}, 'L) ;
+  print({`instantiate ho 1 Up`}) ;
+  implyL(-3) ; <(
+    print({`left of -> 1 Up`}) ;
+    QE
+    ,
+    print({`right of -> 1 Up`}) ;
+    andL(-11) ; hideL(-13=={`t<=tl-(t_+to)|tl < 0`}) ; QE ; print({`right of -> 1 Up QE`})
+    ),
+  print({`final time in straight Up`}) ;
+  allL({`(dhd+w*maxIM)*(t_+t)-w*maxIM^2/(2*aM)`}, 'L) ;
+  print({`instantiate ho 2 Lo`}) ;
+  implyL(-3) ; <(
+    print({`left of -> 1 Up`}) ;
+    QE; print({`left of -> 2 Up QE`})
+    ,
+    print({`right of -> 2 Up`}) ;
+    andL(-11) ; hideL(-13=={`t<=tl-(t_+to)|tl < 0`}) ; orL(-2) ; <(
+      orL(-3) ; <(
+        orL(-5) ; <(
+          orL(-6) ; <(
+            orL(-7) ; <(
+              orL(-13) ; <(
+                andL(-13) ; andL(-14) ; andL(-15) ; QE,
+                QE
+                ),
+              orL(-13) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-13) ; <(
+              QE,
+              QE
+              )
+            ),
+          orL(-13) ; <(
+            orL(-6) ; <(
+              QE,
+              QE
+              ),
+            orL(-6) ; <(
+              QE,
+              QE
+              )
+            )
+          ),
+        orL(-13) ; <(
+          orL(-6) ; <(
+            orL(-5) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-5) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              )
+            ),
+          orL(-5) ; <(
+            orL(-6) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-6) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              )
+            )
+          )
+        ),
+      orL(-3) ; <(
+        orL(-5) ; <(
+          orL(-6) ; <(
+            orL(-7) ; <(
+              orL(-13) ; <(
+                QE,
+                QE
+                ),
+              orL(-13) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-7) ; <(
+              orL(-13) ; <(
+                QE,
+                QE
+                ),
+              orL(-13) ; <(
+                QE,
+                QE
+                )
+              )
+            ),
+          orL(-6) ; <(
+            orL(-7) ; <(
+              orL(-13) ; <(
+                QE,
+                QE
+                ),
+              orL(-13) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-13) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              )
+            )
+          ),
+        orL(-5) ; <(
+          orL(-6) ; <(
+            orL(-7) ; <(
+              orL(-13) ; <(
+                QE,
+                QE
+                ),
+              orL(-13) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-13) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              )
+            ),
+          orL(-13) ; <(
+            orL(-7) ; <(
+              orL(-6) ; <(
+                QE,
+                QE
+                ),
+              orL(-6) ; <(
+                QE,
+                QE
+                )
+              ),
+            orL(-6) ; <(
+              orL(-7) ; <(
+                QE,
+                QE
+                ),
+              orL(-7) ; <(
+                QE,
+                QE
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  ),
+print({`Show Cut`});
+hideL(-2=={`t_+to<=tl|tl < 0`}) ; hideL(-2=={`\forall ho ((t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=w*aM/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=(dhd+w*maxIM)*(t_+t)-w*maxIM^2/(2*aM))->abs(r-rv*(t_+t))>rp|w*h>w*ho+hp)`}) ; hideL(-2=={`hp>0`}) ; hideL(-2=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`}) ; hideL(-2=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`}) ; hideL(-2=={`w=-1|w=1`}) ; hideL(-2=={`rp>=0`}) ; hideL(-2=={`rv>=0`}) ; hideL(-4=={`maxIM=max((0,w*(dhfM-dhd)))`}) ; hideR(1=={`abs((-rv)*t_+r-ro)>rp`}) ; hideR(1=={`w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp`}) ; QE
+)
+
+End.
+
+/*
 print({`lemma Up`}); implyR('R); andL('L)*;
   print({`Before skolem Up`}); allR('R)*; print({`After skolem Up`});
   implyR('R); orR('R);
@@ -264,8 +472,11 @@ print({`lemma Up`}); implyR('R); andL('L)*;
    ),
    print({`SHOW CUT`})
  )
+ */
 
-End.
+
+
+
 
 Theorem "Theorem 4: Main".
 
