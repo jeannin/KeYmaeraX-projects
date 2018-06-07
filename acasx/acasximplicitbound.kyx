@@ -4,24 +4,28 @@ SharedDefinitions.
   R max(R, R).
   R min(R, R).
 
+  /* velocity bound 1 = lower, -1 = upper */
+  R wUp() = (-1).
+  R wLo() = (1).
+
   R maxI(R w, R dhf, R dhd) = ( max(0, w * (dhf - dhd)) ).
   R maxIM(R w, R dhfM, R dhd) = ( max((0,w*(dhfM-dhd))) ).
 
   /* Remark: under the condition w*dhd<=w*dhfM, we always have dhfM = (dhd+w*maxIM) */
   B CM(R w, R dhfM, R dhd, R r, R h) <-> (
     \forall t \forall ro \forall ho (
-        (0 <= t & t < maxI(w,dhfM,dhd)/aM() & ro = rv * t & ho = (w * aM())/2 * t^2 + dhd * t)
-      | (t >= maxI(w,dhfM,dhd)/aM() & ro = rv * t & ho = (dhd+w*maxI(w,dhfM,dhd)) * t - w * maxI(w,dhfM,dhd)^2/(2*aM()))
-      -> (abs(r - ro) > rp() | w * h > w * ho + hp())
+        (t<=tl-to | tl<0) & (0 <= t & t < maxI(w,dhfM,dhd)/aM & ro = rv * t & ho = (w * aM)/2 * t^2 + dhd * t)
+      | (t >= maxI(w,dhfM,dhd)/aM & ro = rv * t & ho = (dhd+w*maxI(w,dhfM,dhd)) * t - w * maxI(w,dhfM,dhd)^2/(2*aM))
+      -> (abs(r - ro) > rp | w * h > w * ho + hp)
     )
   ).
 
   /* todo adapt names to paper r=r, h=h, dhd=v, w=w, dhf=vlo */
   B C(R w, R dhf, R dhd, R r, R h) <-> (
     \forall t \forall ro \forall ho (
-        (0 <= t & t < maxI(w,dhf,dhd)/a() & ro = rv * t & ho = (w * a())/2 * t^2 + dhd * t)
-      | (t >= maxI(w,dhf,dhd)/a() & ro = rv * t & ho = dhf * t - w * maxI(w,dhf,dhd)^2/(2*a()))
-      -> (abs(r - ro) > rp() | w * h < w * ho - hp())
+        (t<=tl-to | tl<0) & (0 <= t & t < maxI(w,dhf,dhd)/a & ro = rv * t & ho = (w * a)/2 * t^2 + dhd * t)
+      | (t >= maxI(w,dhf,dhd)/a & ro = rv * t & ho = dhf * t - w * maxI(w,dhf,dhd)^2/(2*a))
+      -> (abs(r - ro) > rp | w * h < w * ho - hp)
     )
   ).
 
@@ -36,17 +40,17 @@ SharedDefinitions.
     )
   ).*/
 
-  B initBounds() <-> ( hp()>0 & rp()>=0 & rv>=0 ).
+  B initBounds() <-> ( hp>0 & rp>=0 & rv>=0 ).
 
   B init(R a) <-> ( initBounds() & a>0 ).
 
-  B initAll() <-> ( initBounds() & a()>0 & aM()>0 ).
+  B initAll() <-> ( initBounds() & a>0 & aM>0 ).
 
   B loopInv(R w, R dhf, R dhfM, R dhd, R r, R h) <-> (
-    ((w=wUp() | w=wLo()) & (C(w,dhf,dhd,r,h) | CM(w,dhfM,dhd,r,h))) & initAll()
+    ((w=wUp() | w=wLo()) & (to<=tl | tl<0) & (C(w,dhf,dhd,r,h) | CM(w,dhfM,dhd,r,h))) & initAll()
   ).
 
-  B advisory(R w, R dhf, R dhd, R ao) <-> ( w*dhd>=w*dhf|w*ao>=a() ).
+  B advisory(R w, R dhf, R dhd, R ao) <-> ( w*dhd>=w*dhf|w*ao>=a ).
 
   B advisoryUp(R w, R dhfM, R dhd, R ao) <-> ( (w*dhd<=w*dhfM & w*ao<=aM|w*ao<=0) ).
 
@@ -97,7 +101,7 @@ End.
 Problem.
    t_>=0 &
    (t_+to<=tl|tl < 0) &
-   \forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxI(0,dhf,dhd)/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=maxI(0,dhf,dhd)/a&ro=rv*t&ho=dhf*t-w*maxI(0,dhf,dhd)^2/(2*a))->abs(r-ro)>rp|w*h < w*ho-hp) &
+   \forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxI(w,dhf,dhd)/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=maxI(w,dhf,dhd)/a&ro=rv*t&ho=dhf*t-w*maxI(w,dhf,dhd)^2/(2*a))->abs(r-ro)>rp|w*h < w*ho-hp) &
    hp>0 &
    (w*dhd>=w*dhf|w*ao>=a) &
    (w*(ao*t_+dhd)>=w*dhf|w*ao>=a) &
@@ -123,7 +127,7 @@ print({`lemma`}); implyR('R); (andL('L)*);
       print({`Goal 110`}); hideL('L=={`w*dhd>=w*dhf|w*ao>=a`});
       allL({`w*a/2*(t_+t)^2 + dhd*(t_+t)`}, 'L);
         print({`instantiate ho 1 Lo`});
-          implyL('L=={`(t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < max((0,0*(dhf-dhd)))/a&rv*(t_+t)=rv*(t_+t)&w*a/2*(t_+t)^2+dhd*(t_+t)=w*a/2*(t_+t)^2+dhd*(t_+t)|t_+t>=max((0,0*(dhf-dhd)))/a&rv*(t_+t)=rv*(t_+t)&w*a/2*(t_+t)^2+dhd*(t_+t)=dhf*(t_+t)-w*max((0,0*(dhf-dhd)))^2/(2*a))->abs(r-rv*(t_+t))>rp|w*h < w*(w*a/2*(t_+t)^2+dhd*(t_+t))-hp`});
+          implyL('L=={`(t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxI/a&rv*(t_+t)=rv*(t_+t)&w*a/2*(t_+t)^2+dhd*(t_+t)=w*a/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxI/a&rv*(t_+t)=rv*(t_+t)&w*a/2*(t_+t)^2+dhd*(t_+t)=dhf*(t_+t)-w*maxI^2/(2*a))->abs(r-rv*(t_+t))>rp|w*h < w*(w*a/2*(t_+t)^2+dhd*(t_+t))-hp`});
           <(
           print({`left of -> 1 Lo`}); andL('L);
             hideR('R=={`abs((-rv)*t_+r-ro)>rp`}); hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h)<w*ho-hp`});
@@ -255,13 +259,26 @@ print({`lemma Up`}); implyR('R); andL('L)*;
         print({`right of -> 2 Up`});
           andL('L=={`(t<=tl-(t_+to)|tl < 0)&(0<=t&t < max((0,w*(dhfM-(ao*t_+dhd))))/aM&ro=rv*t&ho=w*aM/2*t^2+(ao*t_+dhd)*t|t>=max((0,w*(dhfM-(ao*t_+dhd))))/aM&ro=rv*t&ho=(ao*t_+dhd+w*max((0,w*(dhfM-(ao*t_+dhd)))))*t-w*max((0,w*(dhfM-(ao*t_+dhd))))^2/(2*aM))`});
           hideL('L=={`t<=tl-(t_+to)|tl < 0`});
-          QE; print({`right of -> 2 Up QE`}); done
+          doall(orL('L))*; doall(QE); print({`right of -> 2 Up QE`}); done
         )
    ),
-   print({`SHOW CUT`})
- )
+   print({`SHOW CUT`});
+   hideL('L=={`t_+to<=tl|tl < 0`}) ;
+   hideL('L=={`\forall ho ((t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=w*aM/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=(dhd+w*maxIM)*(t_+t)-w*maxIM^2/(2*aM))->abs(r-rv*(t_+t))>rp|w*h>w*ho+hp)`}) ;
+   hideL('L=={`hp>0`}) ;
+   hideL('L=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`}) ;
+   hideL('L=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`}) ;
+   hideL('L=={`w=-1|w=1`}) ; hideL('L=={`rp>=0`}) ;
+   hideL('L=={`rv>=0`}) ;
+   hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`}) ;
+   hideR('R=={`abs((-rv)*t_+r-ro)>rp`}) ;
+   hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp`}) ;
+   QE
+   )
 
 End.
+
+
 
 Theorem "Theorem 4: Main".
 
@@ -689,112 +706,44 @@ implyR('R); equivR('R);
         print({`Show cut`})
       )
     )
-
-
-
-
+  ,
+  print({`<-`});
+  cut({`tl<0 | tl>=0`});
+  <(
+    orL('L=={`tl<0 | tl>=0`});
+    <(
+      print({`tl<0`});
+      print({`<- unlimited time lower equiv`});
+        /*ACASX_Bounded_TimeLowerA*/
+        /*lweqvA*/
+      ,
+      print({`tl>=0`});
+      cut({`tl-to<0 | tl-to>=0`});
+      <(
+        orL('L=={`tl-to<0 | tl-to>=0`});
+        <(
+          print({`tl>=0 Case tl-to<0`});
+            QE
+          ,
+          print({`tl>=0 Case tl-to>=0`});
+            /*ACASX_Bounded_TimeLowerB*/
+            /*lweqvA*/
+        )
+        ,
+        print({`Show cut`});
+      )
+    )
+    ,
+    print({`Show cut`});
+  )
 
 )
 
-val tactic = implyR('R) & equivR('R) & Idioms.<(
-  dT("Case ->") &
-    (allR('R)*) & dT("After Case -> skolemize") & implyR('R)  &
-    andL('L, "(t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhf-dhd)))/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=max((0,w*(dhf-dhd)))/a&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-dhd)))^2/(2*a))".asFormula) &
-    orL('L, "tl-to < 0&tl>=0|(w*dhf>=0->((-rp<=r&r < -rp-rv*min((0,w*dhd))/a)&(r<=-rp+rv*(tl-to)|tl < 0)->w*rv^2*h < a/2*(r+rp)^2+w*rv*dhd*(r+rp)-rv^2*hp)&((-rp-rv*min((0,w*dhd))/a<=r&r<=rp-rv*min((0,w*dhd))/a)&(-min((0,w*dhd))/a<=tl-to|tl < 0)->w*h < (-min((0,w*dhd))^2)/(2*a)-hp)&((rp-rv*min((0,w*dhd))/a < r&r<=rp+rv*max((0,w*(dhf-dhd)))/a)&(r<=rp+rv*(tl-to)|tl < 0)->w*rv^2*h < a/2*(r-rp)^2+w*rv*dhd*(r-rp)-rv^2*hp)&(rp+rv*max((0,w*(dhf-dhd)))/a < r&(r<=rp+rv*(tl-to)|tl < 0)->rv=0|w*rv*h < w*dhf*(r-rp)-rv*max((0,w*(dhf-dhd)))^2/(2*a)-rv*hp))&(w*dhf < 0->((-rp<=r&r < -rp+rv*max((0,w*(dhf-dhd)))/a)&(r < -rp+rv*(tl-to)|tl < 0)->w*rv^2*h < a/2*(r+rp)^2+w*rv*dhd*(r+rp)-rv^2*hp)&(-rp+rv*max((0,w*(dhf-dhd)))/a<=r&(r < -rp+rv*(tl-to)|tl < 0)->rv=0&r>rp|w*rv*h < w*dhf*(r+rp)-rv*max((0,w*(dhf-dhd)))^2/(2*a)-rv*hp)&((-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to))&tl>=0->tl-to<0|0<=tl-to&tl-to<=max((0,w*(dhf-dhd)))/a&w*h < a/2*(tl-to)^2+w*dhd*(tl-to)-hp|tl-to>max((0,w*(dhf-dhd)))/a&w*h < w*dhf*(tl-to)-max((0,w*(dhf-dhd)))^2/(2*a)-hp))".asFormula) & Idioms.<(
-      dT("-> : tl-to < 0&tl>=0") &
-      Idioms.rememberAs("ACASX_Bounded_Case_Imply0",
-        Idioms.cases(QE)(
-          (Case("t <= tl-to".asFormula), atomicQE(onAll(orL('L))*, dT("-> : tl-to < 0&tl>=0 QE")) & done)
-          ,
-          (Case("tl < 0".asFormula),
-            hideL('L, "0<=t&t < max((0,w*(dhf-dhd)))/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=max((0,w*(dhf-dhd)))/a&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-dhd)))^2/(2*a)".asFormula) & QE)
-          )
-      )
-      ,
-      dT("-> unlimited-time lower equiv") & Idioms.cases(QE)(
-        (Case("w*dhf>=0".asFormula),
-          dT("Case w*dhf>=0") &
-          (andL('L)*) &
-          EqualityTactics.abbrv("max((0,w*(dhf-dhd)))".asTerm, Some(Variable("maxA"))) &
-          EqualityTactics.abbrv("min((0,w*dhd))".asTerm, Some(Variable("minA"))) &
-          max('L, "max(0,w*(dhf-dhd))".asTerm) &
-          min('L, "min(0,w*dhd)".asTerm) &
-          abs('R, "abs(r-ro)".asTerm) & Idioms.cases(QE)(
-            (Case("r < -rp".asFormula), dT("-> 0:r<-rp") & (hideL('Llike, "p_()&q_() -> r_()".asFormula)*3) & QE & done),
-            (Case("-rp<=r&r < -rp-rv*minA/a".asFormula), dT("-> 1:(-rp<=r & r < -rp-rv*minA/a)") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*3) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply1",
-                implyL('L, "(r<=-rp+rv*(tl-to)|tl < 0->w*rv^2*h < a/2*(r+rp)^2+w*rv*dhd*(r+rp)-rv^2*hp)".asFormula) & Idioms.<(
-                  QE & done
-                  ,
-                  atomicQE(ArithmeticLibrary.exhaustiveBeta, dT("-> 1:(-rp<=r & r < -rp-rv*minA/a) QE")) & done
-                ) & done)
-            ),
-            (Case("-rp-rv*minA/a<=r&r<=rp-rv*minA/a".asFormula), dT("-> 2: -rp-rv*minA/a<=r&r<=rp-rv*minA/a") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*3) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply2",
-                implyL('L, "-minA/a<=tl-to|tl < 0->w*h < (-minA^2)/(2*a)-hp".asFormula) & Idioms.<(
-                  QE & done,
-                  atomicQE(ArithmeticLibrary.exhaustiveBeta, dT("-> 2: -rp-rv*minA/a<=r&r<=rp-rv*minA/a QE")) & done
-                ) & done)
-            ),
-            (Case("rp-rv*minA/a < r&r<=rp+rv*maxA/a".asFormula), dT("-> 3: rv*minA/a<=r&r<=rp-rv*minA/") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*3) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply3",
-                atomicQE(ArithmeticLibrary.exhaustiveBeta, dT("-> 3 QE")) & done
-              )
-            ),
-            (Case("rp+rv*maxA/a < r".asFormula), dT("-> 4: rp+rv*maxA/a < r") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*2) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply4",
-                atomicQE(ArithmeticLibrary.exhaustiveBeta, dT("-> 4 QE")) & done)
-            )
-          )
-        )
-        ,
-        (Case("w*dhf<0".asFormula), dT("w*dhf<0") &
-          (andL('L)*) &
-          EqualityTactics.abbrv("max((0,w*(dhf-dhd)))".asTerm, Some(Variable("maxA"))) &
-          max('L, "max(0,w*(dhf-dhd))".asTerm) &
-          abs('R, "abs(r-ro)".asTerm) &
-          Idioms.cases(QE)(
-            (Case("(r< -rp)&(r< -rp+rv*(tl-to)&tl>=0|tl<0)".asFormula), dT("-> 4-5") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*3) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply4to5",
-                atomicQE(ArithmeticLibrary.exhaustiveBeta, dT("-> 4-5 QE")) & done
-              )
-            ),
-            (Case("(-rp<=r&r < -rp+rv*maxA/a)&(r< -rp+rv*(tl-to)|tl<0)".asFormula), dT("-> 5") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*2) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply5",
-                atomicQE(ArithmeticLibrary.exhaustivePropositional, dT("-> 5 QE")) & done)
+End.
 
-            ),
-            (Case("(-rp+rv*maxA/a<=r)&(r< -rp+rv*(tl-to)|tl<0)".asFormula), dT("-> 6") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*2) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply6",
-                atomicQE(ArithmeticLibrary.exhaustivePropositional, dT("-> 6 QE")) & done)
-            ),
-            (Case("(-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to))&(tl>=0)".asFormula), dT("-> 7") &
-              (hideL('Llike, "p_()&q_() -> r_()".asFormula)*2) &
-              Idioms.rememberAs("ACASX_Bounded_Case_Imply7",
-                atomicQE(ArithmeticLibrary.exhaustiveBeta, dT("-> 7 contradiction QE")) & done)
-            ),
-            (Case("(r>rp+rv*(tl-to))&(tl>=0)".asFormula),
-              dT("-> 8") &
-                (hideL('Llike, "p_()&q_() -> r_()".asFormula)*3) &
-                Idioms.rememberAs("ACASX_Bounded_Case_Imply8",
-                Idioms.cases(QE)(
-                  (Case("rp=0".asFormula), orR('R) & hideR('R, "w*h < w*ho-hp".asFormula) & dT("-> 8 Case rp=0") & QE),
-                  (Case("rp>0".asFormula), orL('L, "0<=t&t < maxA/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=maxA/a&ro=rv*t&ho=dhf*t-w*maxA^2/(2*a)".asFormula) & dT("-> 8 Case rp>0") & onAll(QE))
-                )
-              )
-            )
-          )
-        )
-      )
-    )
-  ,
+
+/* Below is the old tactic from the old proof. Update in progress.
+
   dT("<-") & Idioms.cases(QE)(
     (Case("tl<0".asFormula),
       dT("<- unlimited time lower equiv") &
@@ -858,4 +807,178 @@ val tactic = implyR('R) & equivR('R) & Idioms.<(
   )
 )
 
-End.
+
+def allTRoHoL(caseName: String, tInst: String, roInst: String, hoInst: String): BelleExpr =
+  dT(caseName) &
+  allL("t".asVariable, tInst.asTerm)('L) &
+  allL("ro".asVariable, roInst.asTerm)('L) &
+  allL("ho".asVariable, hoInst.asTerm)('L) &
+  dT(s"$caseName Inst")
+
+
+
+def lweqvA(b:BelleExpr,s:BelleExpr,v:BelleExpr)
+
+abbrv({`max((0,w*(dhf-dhd))`}, {`maxA`});
+minmax('L=={`max(0,w*(dhf-dhd))`});
+andR('R);
+<(
+  implyR('R); andR('R);
+  <(
+    print({`<- 1`}); minmax('R=={`min(0,w*dhd)`}); implyR('R); (andL('L)*); cut({`rv=0 | rv>0`});
+    <(
+      orL('L={`rv=0 | rv>0`});
+      <(
+        print({`<- 1:rv=0`});
+          /*allTRoHoL("<- 1:rv=0", "0", "rv*0", "w*a/2*0^2+dhd*0") & b*/
+          allL( {`0`}, 'L);
+          allL( {`rv*0`}, 'L);
+          allL( {`w*a/2*0^2+dhd*0`}, 'L);
+          /*b*/
+        ,
+        print({`<- 1:rv>0`});
+          /*allTRoHoL("<- 1:rv>0", "(r+rp)/rv", "rv*((r+rp)/rv)", "w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)") & b/*d*/*/
+          allL( {`(r+rp)/rv`}, 'L);
+          allL( {`rv*((r+rp)/rv)`}, 'L);
+          allL( {`w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)`}, 'L);
+          /*b*/
+      )
+      ,
+      print({`Show cut`})
+    )
+    ,
+    andR('R);
+    <(
+      print({`<- 2`});
+      abbrv({`min((0,w*dhd))`}, {`minA`});
+      minmax('L=={`min((0,w*dhd))`});
+      implyR('R); (andL('L)*);
+      cut({`rv=0 | rv>0`});
+      <(
+        orL('L=={`rv=0 | rv>0`});
+        <(
+          print({`<- 2:rv=0`});
+            /*allTRoHoL("<- 2:rv=0", "-minA/a", "rv*(-minA/a)", "w*a/2*(-minA/a)^2+dhd*(-minA/a)") & b*/
+            allL( {`-minA/a`}, 'L);
+            allL( {`rv*(-minA/a)`}, 'L);
+            allL( {`w*a/2*(-minA/a)^2+dhd*(-minA/a)`}, 'L);
+            /*b*/
+          ,
+          print({`<- 2:rv>0`});
+            /*allTRoHoL("<- 2:rv>0", "-minA/a", "rv*(-minA/a)", "w*a/2*(-minA/a)^2+dhd*(-minA/a)") & b*/
+            allL( {`-minA/a`}, 'L);
+            allL( {`rv*(-minA/a)`}, 'L);
+            allL( {`w*a/2*(-minA/a)^2+dhd*(-minA/a)`}, 'L);
+            /*b*/
+        )
+        ,
+        print({`Show cut`});
+      )
+      ,
+      andR('R);
+      <(
+        print({`<- 3`}); minmax('R=={`min(0,w*dhd)`}); implyR('R); (andL('L)*);
+        cut({`rv=0 | rv>0`});
+        <(
+          orL('L=={`rv=0 | rv>0`});
+          <(
+            print({`<- 3:rv=0`});
+              /*allTRoHoL("<- 3:rv=0", "0", "rv*0", "w*a/2*0^2+dhd*0") & b*/
+              allL( {`0`}, 'L);
+              allL( {`rv*0`}, 'L);
+              allL( {`w*a/2*0^2+dhd*0`}, 'L);
+              /*b*/
+            ,
+            print({`<- 3:rv>0`});
+              /*allTRoHoL("<- 3:rv>0", "(r-rp)/rv", "rv*((r-rp)/rv)", "w*a/2*((r-rp)/rv)^2+dhd*((r-rp)/rv)") & b*/
+              allL( {`(r-rp)/rv`}, 'L);
+              allL( {`rv*((r-rp)/rv)`}, 'L);
+              allL( {`w*a/2*((r-rp)/rv)^2+dhd*((r-rp)/rv)`}, 'L);
+              /*b*/
+          )
+          ,
+          print({`Show cut`});
+        )
+        ,
+        print({`<- 4`}); implyR('R); cut({`rv=0 | rv>0`});
+        <(
+          orL('L=={`rv=0 | rv>0`});
+          <(
+            print({`<- 4:rv=0`});
+              closeTrue;
+            ,
+            print({`<- 4:rv>0`});
+              /*allTRoHoL("<- 4:rv>0", "(r-rp)/rv", "rv*((r-rp)/rv)", "dhf*((r-rp)/rv)-w*maxA^2/(2*a)") & b/*n*/*/
+              allL( {`(r-rp)/rv`}, 'L);
+              allL( {`rv*((r-rp)/rv)`}, 'L);
+              allL( {`dhf*((r-rp)/rv)-w*maxA^2/(2*a)`}, 'L);
+              /*b*/
+          )
+          ,
+          print({`Show cut`});
+        )
+      )
+    )
+  )
+  ,
+  implyR('R); andR('R);
+  <(
+    print({`<- 5`}); implyR('R);
+    cut({`rv=0 | rv>0`});
+    <(
+      orL('L=={`rv=0 | rv>0`});
+      <(
+        print({`<- 5:rv=0`});
+          /*allTRoHoL("<- 5:rv=0", "0", "0", "0") & b*/
+          allL( {`0`}, 'L);
+          allL( {`0`}, 'L);
+          allL( {`0`}, 'L);
+          /*b*/
+        ,
+        print('L=={`<- 5:rv>0`});
+          /*allTRoHoL("<- 5:rv>0", "(r+rp)/rv", "rv*((r+rp)/rv)", "w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)") & b*/
+          allL( {`(r+rp)/rv`}, 'L);
+          allL( {`rv*((r+rp)/rv)`}, 'L);
+          allL( {`w*a/2*((r+rp)/rv)^2+dhd*((r+rp)/rv)`}, 'L);
+          /*b*/
+      )
+      ,
+      print({`Show cut`});
+    )
+    ,
+    print({`<- 6`});
+    cut({`rv=0 | rv>0`});
+    <(
+      orL('L=={`rv=0 | rv>0`});
+      <(
+        print({`<- 6:rv=0`});
+          cut({`r>rp | r <= rp`});
+          <(
+            orL('L=={`r>rp | r <= rp`});
+            <(
+              closeT
+              ,
+              /*s*/
+            )
+          )
+        ,
+        print({`<- 6:rv>0`});
+        /*v*/
+      )
+      ,
+      print({`Show cut`});
+    )
+  )
+)
+
+
+
+
+
+
+
+
+
+
+
+*/
