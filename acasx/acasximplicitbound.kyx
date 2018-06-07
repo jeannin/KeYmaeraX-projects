@@ -131,35 +131,47 @@ print({`lemma`}); implyR('R); (andL('L)*);
           <(
           print({`left of -> 1 Lo`}); andL('L);
             hideR('R=={`abs((-rv)*t_+r-ro)>rp`}); hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h)<w*ho-hp`});
-            doall(QE); print({`tl 1 QE`});
+            doall(orL('L))*; doall(print({`tl 1 QE`}) & QE);
             done
           ,
           print({`right of -> 1 Lo`});
             andL('L=={`(t<=tl-(t_+to)|tl < 0)&(0<=t&t < max((0,w*(dhf-(ao*t_+dhd))))/a&ro=rv*t&ho=w*a/2*t^2+(ao*t_+dhd)*t|t>=max((0,w*(dhf-(ao*t_+dhd))))/a&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-(ao*t_+dhd))))^2/(2*a))`});
             hideL('L=={`t<=tl-(t_+to)|tl < 0`});
-            doall(QE); print({`tl 2 QE`});
+            doall(orL('L))*; doall(print({`tl 2 QE`}) & QE);
             done
           ),
        print({`final time in straight Lo`});
          allL({`dhf*(t_+t) - w*maxI^2/(2*a)`}, 'L);
          print({`instantiate ho 2 Lo`});
-           implyL('L=={`(t_+t<=tl-to|tl < 0)&dhf*(t_+t)-w*maxI^2/(2*a)=dhf*(t_+t)-w*maxI^2/(2*a)->abs(r-rv*(t_+t))>rp|w*h < w*(dhf*(t_+t)-w*maxI^2/(2*a))-hp`});
+           implyL('L=={`(t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxI/a&rv*(t_+t)=rv*(t_+t)&dhf*(t_+t)-w*maxI^2/(2*a)=w*a/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxI/a&rv*(t_+t)=rv*(t_+t)&dhf*(t_+t)-w*maxI^2/(2*a)=dhf*(t_+t)-w*maxI^2/(2*a))->abs(r-rv*(t_+t))>rp|w*h < w*(dhf*(t_+t)-w*maxI^2/(2*a))-hp`});
            <(
             print({`left of -> 2 Lo`}); andL('L);
-              cohideR('R);
               hideL('L=={`maxI=max((0,w*(dhf-dhd)))`});
-              QE; print({`final time in straight Lo QE`});
+              hideR('R=={`abs((-rv)*t_+r-ro)>rp`}); hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h) < w*ho-hp`});
+              doall(orL('L))*; doall(print({`final time in straight Lo QE`}) & QE);
               done
             ,
             print({`right of -> 2 Lo`});
               andL('L=={`(t<=tl-(t_+to)|tl < 0)&(0<=t&t < max((0,w*(dhf-(ao*t_+dhd))))/a&ro=rv*t&ho=w*a/2*t^2+(ao*t_+dhd)*t|t>=max((0,w*(dhf-(ao*t_+dhd))))/a&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-(ao*t_+dhd))))^2/(2*a))`});
               hideL('L=={`t_+to<=tl|tl < 0`});
-              QE; print({`right of -> 2 Lo QE`});
+              doall(orL('L))*; doall(print({`right of -> 2 Lo QE`}) & QE);
               done
           )
     )
     ,
-    print({`SHOW CUT`})
+    print({`SHOW CUT`});
+      hideL('L=={`t_+to<=tl|tl < 0`});
+      hideL('L=={`\forall ho ((t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxI/a&rv*(t_+t)=rv*(t_+t)&ho=w*a/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxI/a&rv*(t_+t)=rv*(t_+t)&ho=dhf*(t_+t)-w*maxI^2/(2*a))->abs(r-rv*(t_+t))>rp|w*h < w*ho-hp)`});
+      hideL('L=={`hp>0`});
+      hideL('L=={`w*dhd>=w*dhf|w*ao>=a`});
+      hideL('L=={`w*(ao*t_+dhd)>=w*dhf|w*ao>=a`});
+      hideL('L=={`w=-1|w=1`});
+      hideL('L=={`rp>=0`});
+      hideL('L=={`rv>=0`});
+      hideL('L=={`maxI=max((0,w*(dhf-dhd)))`});
+      hideR('R=={`abs((-rv)*t_+r-ro)>rp`});
+      hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h) < w*ho-hp`});
+      QE
 )
 
 End.
@@ -239,12 +251,12 @@ print({`lemma Up`}); implyR('R); andL('L)*;
           print({`left of -> 1 Up`});
           /* cohideR('R); cohideOnlyR('Rlast)
           hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`}); */
-          QE; done
+          print({`tl 1 QE`}); QE; done
           ,
           print({`right of -> 1 Up`});
           andL('L=={`(t<=tl-(t_+to)|tl < 0)&(0<=t&t < max((0,w*(dhfM-(ao*t_+dhd))))/aM&ro=rv*t&ho=w*aM/2*t^2+(ao*t_+dhd)*t|t>=max((0,w*(dhfM-(ao*t_+dhd))))/aM&ro=rv*t&ho=(ao*t_+dhd+w*max((0,w*(dhfM-(ao*t_+dhd)))))*t-w*max((0,w*(dhfM-(ao*t_+dhd))))^2/(2*aM))`});
           hideL('L=={`t<=tl-(t_+to)|tl < 0`});
-          QE; print({`right of -> 1 Up QE`}); done
+          print({`right of -> 1 Up QE`}); QE; done
         ),
       print({`final time in straight Up`});
         allL({`(dhd+w*maxIM)*(t_+t)-w*maxIM^2/(2*aM)`}, 'L);
@@ -254,26 +266,27 @@ print({`lemma Up`}); implyR('R); andL('L)*;
         print({`left of -> 1 Up`});
           /*cohideR('R); cohideOnlyR('Rlast) try cohide2
           hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`});*/
-          QE; print({`left of -> 2 Up QE`}); done
+          print({`left of -> 2 Up QE`}); QE; done
         ,
         print({`right of -> 2 Up`});
           andL('L=={`(t<=tl-(t_+to)|tl < 0)&(0<=t&t < max((0,w*(dhfM-(ao*t_+dhd))))/aM&ro=rv*t&ho=w*aM/2*t^2+(ao*t_+dhd)*t|t>=max((0,w*(dhfM-(ao*t_+dhd))))/aM&ro=rv*t&ho=(ao*t_+dhd+w*max((0,w*(dhfM-(ao*t_+dhd)))))*t-w*max((0,w*(dhfM-(ao*t_+dhd))))^2/(2*aM))`});
           hideL('L=={`t<=tl-(t_+to)|tl < 0`});
-          doall(orL('L))*; doall(QE); print({`right of -> 2 Up QE`}); done
+          doall(orL('L))*; doall(print({`right of -> 2 Up QE`}) & QE); done
         )
    ),
    print({`SHOW CUT`});
-   hideL('L=={`t_+to<=tl|tl < 0`}) ;
-   hideL('L=={`\forall ho ((t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=w*aM/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=(dhd+w*maxIM)*(t_+t)-w*maxIM^2/(2*aM))->abs(r-rv*(t_+t))>rp|w*h>w*ho+hp)`}) ;
-   hideL('L=={`hp>0`}) ;
-   hideL('L=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`}) ;
-   hideL('L=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`}) ;
-   hideL('L=={`w=-1|w=1`}) ; hideL('L=={`rp>=0`}) ;
-   hideL('L=={`rv>=0`}) ;
-   hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`}) ;
-   hideR('R=={`abs((-rv)*t_+r-ro)>rp`}) ;
-   hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp`}) ;
-   QE
+     hideL('L=={`t_+to<=tl|tl < 0`});
+     hideL('L=={`\forall ho ((t_+t<=tl-to|tl < 0)&(0<=t_+t&t_+t < maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=w*aM/2*(t_+t)^2+dhd*(t_+t)|t_+t>=maxIM/aM&rv*(t_+t)=rv*(t_+t)&ho=(dhd+w*maxIM)*(t_+t)-w*maxIM^2/(2*aM))->abs(r-rv*(t_+t))>rp|w*h>w*ho+hp)`});
+     hideL('L=={`hp>0`});
+     hideL('L=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`});
+     hideL('L=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`});
+     hideL('L=={`w=-1|w=1`});
+     hideL('L=={`rp>=0`});
+     hideL('L=={`rv>=0`});
+     hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`});
+     hideR('R=={`abs((-rv)*t_+r-ro)>rp`});
+     hideR('R=={`w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp`});
+     QE
    )
 
 End.
