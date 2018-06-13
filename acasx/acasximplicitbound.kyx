@@ -18,8 +18,8 @@ SharedDefinitions.
   /* Remark: under the condition w*dhd<=w*dhfM, we always have dhfM = (dhd+w*maxIM) */
   B CM(R w, R dhfM, R dhd, R r, R h) <-> (
     \forall t \forall ro \forall ho (
-        (t<=tl-to | tl<0) & (0 <= t & t < maxI(w,dhfM,dhd)/aM() & ro = rv * t & ho = (w * aM())/2 * t^2 + dhd * t)
-      | (t >= maxI(w,dhfM,dhd)/aM() & ro = rv * t & ho = (dhd+w*maxI(w,dhfM,dhd)) * t - w * maxI(w,dhfM,dhd)^2/(2*aM()))
+        (t<=tl-to | tl<0) & ((0 <= t & t < maxI(w,dhfM,dhd)/aM() & ro = rv * t & ho = (w * aM())/2 * t^2 + dhd * t)
+      | (t >= maxI(w,dhfM,dhd)/aM() & ro = rv * t & ho = (dhd+w*maxI(w,dhfM,dhd)) * t - w * maxI(w,dhfM,dhd)^2/(2*aM())))
       -> (abs(r - ro) > rp() | w * h > w * ho + hp())
     )
   ).
@@ -27,8 +27,8 @@ SharedDefinitions.
   /* todo adapt names to paper r=r, h=h, dhd=v, w=w, dhf=vlo */
   B C(R w, R dhf, R dhd, R r, R h) <-> (
     \forall t \forall ro \forall ho (
-        (t<=tl-to | tl<0) & (0 <= t & t < maxI(w,dhf,dhd)/a() & ro = rv * t & ho = (w * a())/2 * t^2 + dhd * t)
-      | (t >= maxI(w,dhf,dhd)/a() & ro = rv * t & ho = dhf * t - w * maxI(w,dhf,dhd)^2/(2*a()))
+        (t<=tl-to | tl<0) & ((0 <= t & t < maxI(w,dhf,dhd)/a() & ro = rv * t & ho = (w * a())/2 * t^2 + dhd * t)
+      | (t >= maxI(w,dhf,dhd)/a() & ro = rv * t & ho = dhf * t - w * maxI(w,dhf,dhd)^2/(2*a())))
       -> (abs(r - ro) > rp() | w * h < w * ho - hp())
     )
   ).
@@ -44,17 +44,17 @@ SharedDefinitions.
     )
   ).*/
 
-  B initBounds() <-> ( hp>0 & rp>=0 & rv>=0 ).
+  B initBounds() <-> ( hp()>0 & rp()>=0 & rv>=0 ).
 
   B init(R a) <-> ( initBounds() & a>0 ).
 
-  B initAll() <-> ( initBounds() & a>0 & aM>0 ).
+  B initAll() <-> ( initBounds() & a()>0 & aM()>0 ).
 
   B loopInv(R w, R dhf, R dhfM, R dhd, R r, R h) <-> (
-    (((w=wUp() | w=wLo()) & (to<=tl | tl<0)) & (C(w,dhf,dhd,r,h) | CM(w,dhfM,dhd,r,h))) & initAll()
+    ((w=wUp() | w=wLo()) & (to<=tl | tl<0) & (C(w,dhf,dhd,r,h) | CM(w,dhfM,dhd,r,h))) & initAll()
   ).
 
-  B advisory(R w, R dhf, R dhd, R ao) <-> ( w*dhd>=w*dhf|w*ao>=a ).
+  B advisory(R w, R dhf, R dhd, R ao) <-> ( w*dhd>=w*dhf|w*ao>=a() ).
 
   B advisoryUp(R w, R dhfM, R dhd, R ao) <-> ( (w*dhd<=w*dhfM & w*ao<=aM|w*ao<=0) ).
 
@@ -484,7 +484,7 @@ End.
 
 Tactic "prove Theorem 4: Main".
 
-implyR('R); andL('L)*;
+implyR('R); andL('L);
   loop({`loopInv(w, dhf, dhfM, dhd, r, h)`},'R)
   <(
     /*initCase*/
@@ -494,79 +494,21 @@ implyR('R); andL('L)*;
       print({`Base Case Done`})
     ,
     /*use*/
-    print({`Use case`})
-    /*
-      andL('L)*;
-      hideL('L=={`(hp>0&rp>=0&rv>=0)&a>0&aM>0`});
+    print({`Use case`});
+      hideL('L=={`hp>0`});
+      hideL('L=={`rp>=0`});
+      hideL('L=={`rv>=0`});
+      hideL('L=={`a>0`});
+      hideL('L=={`aM>0`});
       andR('R); <(
-        useLemma({`Theorem 4: Correctness of lower bound`}, {`prop`});
+        useLemma({`Theorem 4: Use case lemma`}, {`prop`});
         print({`here`}); done,
         andL('L); closeId
       );
       done
-    */
     ,
     /*step*/
-    print({`Step`});
-      andL('L);
-      hideL('L=={`hp>0&rp>=0&rv>=0&a>0&aM>0`});
-      composeb('R);
-      MR({`loopInv(w, dhf, dhfM, dhd, r, h)`},1);
-      <(
-        print({`Generalization Holds`});
-        print({`1.21`}); chase('R); print({`After chase`});
-        ((fullSimplify; andL('L)*)*); print({`Simplified`});
-        /* closeT */
-        done,
-        /*use*/
-        print({`Generalization Strong Enough`});
-        cut({``!evolutionDomain(w,dhf,dhfM,dhd,ao) | evolutionDomain(w,dhf,dhfM,dhd,ao)`});
-        <(
-          orL('L=={`!evolutionDomain(w,dhf,dhfM,dhd,ao) | evolutionDomain(w,dhf,dhfM,dhd,ao)`});
-          <(
-            print({`Not evolutionDomain`});
-              hideL('L=={`loopInv(w, dhf, dhfM, dhd, r, h)`});
-              DI('R); notL('L); closeId; done
-            ,
-            print({`evolutionDomain`});
-              print({`Before diff. solution`});
-              abbrv({`max(0,w*(dhf-dhd))`}, {`maxI`});
-              abbrv({`max(0,w*(dhfM-dhd))`}, {`maxIM`});
-              solveEnd('R);
-              print({`Diff. Solution`}); allR('R); implyR('R); (andL('L)*); print({`Now what?`}); fullSimplify; print({`Simplified 2`});
-              orR('R);
-              hideL('L=={`to<=tl|tl < 0`});
-              orL('L=={`\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxI/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=maxI/a&ro=rv*t&ho=dhf*t-w*maxI^2/(2*a))->abs(r-ro)>rp|w*h < w*ho-hp)|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxIM/aM&ro=rv*t&ho=w*aM/2*t^2+dhd*t|t>=maxIM/aM&ro=rv*t&ho=(dhd+w*maxIM)*t-w*maxIM^2/(2*aM))->abs(r-ro)>rp|w*h>w*ho+hp)`});
-              <(
-                print({`Before hide lower`});
-                  hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`}); hideL('L=={`aM>0`});
-                  hideL('L=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`});
-                  hideL('L=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`});
-                  hideR('R=={`\forall t \forall ro \forall ho ((t<=tl-(t_+to)|tl < 0)&(0<=t&t < max(0,w*(dhfM-(ao*t_+dhd)))/aM&ro=rv*t&ho=w*aM/2*t^2+(ao*t_+dhd)*t|t>=max(0,w*(dhfM-(ao*t_+dhd)))/aM&ro=rv*t&ho=(ao*t_+dhd+w*max(0,w*(dhfM-(ao*t_+dhd))))*t-w*max(0,w*(dhfM-(ao*t_+dhd)))^2/(2*aM))->abs((-rv)*t_+r-ro)>rp|w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp)`});
-                  print({`lower lemma`})
-                  /*
-                    dT("lower lemma") & PropositionalTactics.toSingleFormula &
-                    by(lemmaDB.get("bounded_safe_implicit").getOrElse(throw new BelleAbort("Incomplete", "Lemma bounded_safe_implicit must be proved first"))),
-                  */
-                ,
-                print({`Before hide upper`});
-                  hideL('L=={`maxI=max((0,w*(dhf-dhd)))`}); hideL('L=={`a>0`});
-                  hideL('L=={`w*dhd>=w*dhf|w*ao>=a`});
-                  hideL('L=={`w*(ao*t_+dhd)>=w*dhf|w*ao>=a`});
-                  hideR('R=={`\forall t \forall ro \forall ho ((t<=tl-(t_+to)|tl < 0)&(0<=t&t < max(0,w*(dhf-(ao*t_+dhd)))/a&ro=rv*t&ho=w*a/2*t^2+(ao*t_+dhd)*t|t>=max(0,w*(dhf-(ao*t_+dhd)))/a&ro=rv*t&ho=dhf*t-w*max(0,w*(dhf-(ao*t_+dhd)))^2/(2*a))->abs((-rv)*t_+r-ro)>rp|w*(-(ao/2*t_^2+dhd*t_)+h) < w*ho-hp)`});
-                  print({`upper lemma`})
-                  /*
-                    dT("upper lemma") & PropositionalTactics.toSingleFormula &
-                    by(lemmaDB.get("bounded_safe_upimplicit").getOrElse(throw new BelleAbort("Incomplete", "Lemma bounded_safe_upimplicit must be proved first")))
-                  */
-              )
-            )
-          ,
-          print({`Print CUT`})
-        )
-       )
-
-
+    print({`Step`})
    )
 
 End.
@@ -1070,7 +1012,65 @@ andR('R);
 
 
 /*
-
+/*
+  andL('L);
+  hideL('L=={`hp>0&rp>=0&rv>=0&a>0&aM>0`});
+  composeb('R);
+  MR({`loopInv(w, dhf, dhfM, dhd, r, h)`},1);
+  <(
+    print({`Generalization Holds`});
+    print({`1.21`}); chase('R); print({`After chase`});
+    ((fullSimplify; andL('L)*)*); print({`Simplified`});
+    /* closeT */
+    done,
+    /*use*/
+    print({`Generalization Strong Enough`});
+    cut({``!evolutionDomain(w,dhf,dhfM,dhd,ao) | evolutionDomain(w,dhf,dhfM,dhd,ao)`});
+    <(
+      orL('L=={`!evolutionDomain(w,dhf,dhfM,dhd,ao) | evolutionDomain(w,dhf,dhfM,dhd,ao)`});
+      <(
+        print({`Not evolutionDomain`});
+          hideL('L=={`loopInv(w, dhf, dhfM, dhd, r, h)`});
+          DI('R); notL('L); closeId; done
+        ,
+        print({`evolutionDomain`});
+          print({`Before diff. solution`});
+          abbrv({`max(0,w*(dhf-dhd))`}, {`maxI`});
+          abbrv({`max(0,w*(dhfM-dhd))`}, {`maxIM`});
+          solveEnd('R);
+          print({`Diff. Solution`}); allR('R); implyR('R); (andL('L)*); print({`Now what?`}); fullSimplify; print({`Simplified 2`});
+          orR('R);
+          hideL('L=={`to<=tl|tl < 0`});
+          orL('L=={`\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxI/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=maxI/a&ro=rv*t&ho=dhf*t-w*maxI^2/(2*a))->abs(r-ro)>rp|w*h < w*ho-hp)|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxIM/aM&ro=rv*t&ho=w*aM/2*t^2+dhd*t|t>=maxIM/aM&ro=rv*t&ho=(dhd+w*maxIM)*t-w*maxIM^2/(2*aM))->abs(r-ro)>rp|w*h>w*ho+hp)`});
+          <(
+            print({`Before hide lower`});
+              hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`}); hideL('L=={`aM>0`});
+              hideL('L=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`});
+              hideL('L=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`});
+              hideR('R=={`\forall t \forall ro \forall ho ((t<=tl-(t_+to)|tl < 0)&(0<=t&t < max(0,w*(dhfM-(ao*t_+dhd)))/aM&ro=rv*t&ho=w*aM/2*t^2+(ao*t_+dhd)*t|t>=max(0,w*(dhfM-(ao*t_+dhd)))/aM&ro=rv*t&ho=(ao*t_+dhd+w*max(0,w*(dhfM-(ao*t_+dhd))))*t-w*max(0,w*(dhfM-(ao*t_+dhd)))^2/(2*aM))->abs((-rv)*t_+r-ro)>rp|w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp)`});
+              print({`lower lemma`})
+              /*
+                dT("lower lemma") & PropositionalTactics.toSingleFormula &
+                by(lemmaDB.get("bounded_safe_implicit").getOrElse(throw new BelleAbort("Incomplete", "Lemma bounded_safe_implicit must be proved first"))),
+              */
+            ,
+            print({`Before hide upper`});
+              hideL('L=={`maxI=max((0,w*(dhf-dhd)))`}); hideL('L=={`a>0`});
+              hideL('L=={`w*dhd>=w*dhf|w*ao>=a`});
+              hideL('L=={`w*(ao*t_+dhd)>=w*dhf|w*ao>=a`});
+              hideR('R=={`\forall t \forall ro \forall ho ((t<=tl-(t_+to)|tl < 0)&(0<=t&t < max(0,w*(dhf-(ao*t_+dhd)))/a&ro=rv*t&ho=w*a/2*t^2+(ao*t_+dhd)*t|t>=max(0,w*(dhf-(ao*t_+dhd)))/a&ro=rv*t&ho=dhf*t-w*max(0,w*(dhf-(ao*t_+dhd)))^2/(2*a))->abs((-rv)*t_+r-ro)>rp|w*(-(ao/2*t_^2+dhd*t_)+h) < w*ho-hp)`});
+              print({`upper lemma`})
+              /*
+                dT("upper lemma") & PropositionalTactics.toSingleFormula &
+                by(lemmaDB.get("bounded_safe_upimplicit").getOrElse(throw new BelleAbort("Incomplete", "Lemma bounded_safe_upimplicit must be proved first")))
+              */
+          )
+        )
+      ,
+      print({`Print CUT`})
+    )
+   )
+   */
 
 
 
