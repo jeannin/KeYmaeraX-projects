@@ -502,13 +502,51 @@ implyR('R); andL('L);
       hideL('L=={`aM>0`});
       andR('R); <(
         useLemma({`Theorem 4: Use case lemma`}, {`prop`});
-        print({`here`}); done,
-        andL('L); closeId
+        print({`here`}); done
+        ,
+        andL('L);
+        hideL('L=={`(hp()>0&rp()>=0&rv>=0)&a()>0&aM()>0`});
+        andL('L); andL('L);
+        /*
+        andL('L=={`(w=-1|w=1)&(to<=tl|tl < 0)&(\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=w*a()/2*t^2+dhd*t|t>=max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-dhd)))^2/(2*a()))->abs(r-ro)>rp()|w*h < w*ho-hp())|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=w*aM()/2*t^2+dhd*t|t>=max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=(dhd+w*max((0,w*(dhfM-dhd))))*t-w*max((0,w*(dhfM-dhd)))^2/(2*aM()))->abs(r-ro)>rp()|w*h>w*ho+hp()))`});
+        andL('L=={`(to<=tl|tl < 0)&(\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=w*a()/2*t^2+dhd*t|t>=max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-dhd)))^2/(2*a()))->abs(r-ro)>rp()|w*h < w*ho-hp())|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=w*aM()/2*t^2+dhd*t|t>=max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=(dhd+w*max((0,w*(dhfM-dhd))))*t-w*max((0,w*(dhfM-dhd)))^2/(2*aM()))->abs(r-ro)>rp()|w*h>w*ho+hp()))`});
+        andR('R=={`((w=-1|w=1)&(to<=tl|tl < 0))&(\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=w*a()/2*t^2+dhd*t|t>=max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-dhd)))^2/(2*a()))->abs(r-ro)>rp()|w*h < w*ho-hp())|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=w*aM()/2*t^2+dhd*t|t>=max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=(dhd+w*max((0,w*(dhfM-dhd))))*t-w*max((0,w*(dhfM-dhd)))^2/(2*aM()))->abs(r-ro)>rp()|w*h>w*ho+hp()))`});
+        */
+        andR('R); <(
+          /*
+          hideL('L=={`\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=w*a()/2*t^2+dhd*t|t>=max((0,w*(dhf-dhd)))/a()&ro=rv*t&ho=dhf*t-w*max((0,w*(dhf-dhd)))^2/(2*a()))->abs(r-ro)>rp()|w*h < w*ho-hp())|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=w*aM()/2*t^2+dhd*t|t>=max((0,w*(dhfM-dhd)))/aM()&ro=rv*t&ho=(dhd+w*max((0,w*(dhfM-dhd))))*t-w*max((0,w*(dhfM-dhd)))^2/(2*aM()))->abs(r-ro)>rp()|w*h>w*ho+hp())`});
+          prop
+          */
+          prop
+          ,
+          hideL('L=={`w=-1|w=1`});
+          hideL('L=={`to<=tl|tl < 0`});
+          prop
+        )
       );
       done
     ,
     /*step*/
-    print({`Step`})
+    print({`Step`});
+      andL('L);
+      hideL('L=={`(hp()>0&rp()>=0&rv>=0)&a()>0&aM()>0`});
+      hideL('L=={`hp>0`});
+      hideL('L=={`rp>=0`});
+      hideL('L=={`rv>=0`});
+      hideL('L=={`a>0`});
+      hideL('L=={`aM>0`});
+      composeb('R);
+      MR({`loopInv(w, dhf, dhfM, dhd, r, h)`},1);
+      <(
+        print({`Generalization Holds`});
+        print({`1.21`}); chase('R); print({`After chase`});
+        ((fullSimplify; andL('L)*)*); print({`Simplified`});
+        prop;
+        done
+        ,
+        print({`Generalization Strong Enough`})
+       )
+      print({`breakpoint`})
    )
 
 End.
@@ -1014,14 +1052,14 @@ andR('R);
 /*
 /*
   andL('L);
-  hideL('L=={`hp>0&rp>=0&rv>=0&a>0&aM>0`});
+  hideL('L=={`(hp()>0&rp()>=0&rv>=0)&a()>0&aM()>0`});
   composeb('R);
   MR({`loopInv(w, dhf, dhfM, dhd, r, h)`},1);
   <(
     print({`Generalization Holds`});
     print({`1.21`}); chase('R); print({`After chase`});
     ((fullSimplify; andL('L)*)*); print({`Simplified`});
-    /* closeT */
+    /* closeT or prop */
     done,
     /*use*/
     print({`Generalization Strong Enough`});
