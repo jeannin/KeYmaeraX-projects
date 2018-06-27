@@ -502,7 +502,7 @@ implyR('R); andL('L);
       hideL('L=={`aM>0`});
       andR('R); <(
         useLemma({`Theorem 4: Use case lemma`}, {`prop`});
-        print({`here`}); done
+        print({`here, after use lemma`}); done
         ,
         andL('L);
         hideL('L=={`(hp()>0&rp()>=0&rv>=0)&a()>0&aM()>0`});
@@ -557,16 +557,18 @@ implyR('R); andL('L);
             ,
             print({`evolutionDomain`});
               print({`Before diff. solution`});
+              /* LITTLE FINICKY HERE
               abbrv({`max(0,w*(dhf-dhd))`}, {`maxI`});
               abbrv({`max(0,w*(dhfM-dhd))`}, {`maxIM`});
+              */
               solveEnd('R);
               print({`Diff. Solution`}); allR('R); implyR('R); implyR('R); (andL('L)*); print({`Now what?`}); fullSimplify; print({`Simplified 2`});
               orR('R);
-              /*hideL('L=={`to<=tl|tl < 0`});*/
-              orL('L=={`\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxI/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=maxI/a&ro=rv*t&ho=dhf*t-w*maxI^2/(2*a))->abs(r-ro)>rp|w*h < w*ho-hp)|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < maxIM/aM&ro=rv*t&ho=w*aM/2*t^2+dhd*t|t>=maxIM/aM&ro=rv*t&ho=(dhd+w*maxIM)*t-w*maxIM^2/(2*aM))->abs(r-ro)>rp|w*h>w*ho+hp)`});
+              hideL('L=={`to<=tl|tl < 0`});
+              orL('L=={`\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max(0,w*(dhf-dhd))/a&ro=rv*t&ho=w*a/2*t^2+dhd*t|t>=max(0,w*(dhf-dhd))/a&ro=rv*t&ho=dhf*t-w*max(0,w*(dhf-dhd))^2/(2*a))->abs(r-ro)>rp|w*h < w*ho-hp)|\forall t \forall ro \forall ho ((t<=tl-to|tl < 0)&(0<=t&t < max(0,w*(dhfM-dhd))/aM&ro=rv*t&ho=w*aM/2*t^2+dhd*t|t>=max(0,w*(dhfM-dhd))/aM&ro=rv*t&ho=(dhd+w*max(0,w*(dhfM-dhd)))*t-w*max(0,w*(dhfM-dhd))^2/(2*aM))->abs(r-ro)>rp|w*h>w*ho+hp)`});
               <(
                 print({`Before hide lower`});
-                  hideL('L=={`maxIM=max((0,w*(dhfM-dhd)))`}); hideL('L=={`aM>0`});
+                  hideL('L=={`aM>0`});
                   hideL('L=={`w*dhd<=w*dhfM&w*ao<=aM|w*ao<=0`});
                   hideL('L=={`w*(ao*t_+dhd)<=w*dhfM&w*ao<=aM|w*ao<=0`});
                   hideR('R=={`\forall t \forall ro \forall ho ((t<=tl-(t_+to)|tl < 0)&(0<=t&t < max(0,w*(dhfM-(ao*t_+dhd)))/aM&ro=rv*t&ho=w*aM/2*t^2+(ao*t_+dhd)*t|t>=max(0,w*(dhfM-(ao*t_+dhd)))/aM&ro=rv*t&ho=(ao*t_+dhd+w*max(0,w*(dhfM-(ao*t_+dhd))))*t-w*max(0,w*(dhfM-(ao*t_+dhd)))^2/(2*aM))->abs((-rv)*t_+r-ro)>rp|w*(-(ao/2*t_^2+dhd*t_)+h)>w*ho+hp)`});
@@ -575,7 +577,7 @@ implyR('R); andL('L);
                   print({`After prop lower`}); done
                 ,
                 print({`Before hide upper`});
-                  hideL('L=={`maxI=max((0,w*(dhf-dhd)))`}); hideL('L=={`a>0`});
+                  hideL('L=={`a>0`});
                   hideL('L=={`w*dhd>=w*dhf|w*ao>=a`});
                   hideL('L=={`w*(ao*t_+dhd)>=w*dhf|w*ao>=a`});
                   hideR('R=={`\forall t \forall ro \forall ho ((t<=tl-(t_+to)|tl < 0)&(0<=t&t < max(0,w*(dhf-(ao*t_+dhd)))/a&ro=rv*t&ho=w*a/2*t^2+(ao*t_+dhd)*t|t>=max(0,w*(dhf-(ao*t_+dhd)))/a&ro=rv*t&ho=dhf*t-w*max(0,w*(dhf-(ao*t_+dhd)))^2/(2*a))->abs((-rv)*t_+r-ro)>rp|w*(-(ao/2*t_^2+dhd*t_)+h) < w*ho-hp)`});
@@ -585,7 +587,7 @@ implyR('R); andL('L);
               )
             )
           ,
-          print({`Print CUT`})
+          print({`Print CUT (130,1)`})
         )
        );
       print({`breakpoint`})
