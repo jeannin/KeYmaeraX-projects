@@ -1310,3 +1310,584 @@ Tactic "proof Lemma 4b: time-limited implicit-explicit upper equivalence".
 End.
 
 End.
+
+/* WORKSPACE, Definitions of functions
+
+def substTactic0(String)
+
+  implyR(1);
+  print({`substTactic0`});
+  allL( {`(r-rp)/rv`}, 'L);
+  allL( {`(r-rp)`}, 'L);
+  allL( {`STRING`}, 'L);
+  implyL('L);
+  <(
+    print({`a`});
+      andR('R);
+      doall(QE);
+    ,
+    print({`b`});
+      hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+      QE;
+  )
+
+def substTactic1(string, int)
+
+  print({`substTactic1`});
+  allL( {`(r+rp)/rv`}, 'L);
+  allL( {`(r+rp)`}, 'L);
+  allL( {`STRING`}, 'L);
+  implyL('L);
+  <(
+    print({`__01__`});
+      hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+      QE;
+    ,
+    print({`__02__`});
+      orL('L);
+      onall(QE);
+  )
+
+
+def tac2()
+
+  implyR(1);
+  andR('R);
+  <(
+    print({`1.1`});
+      implyR(1);
+      print({`1.1`});
+      allL( {`0`}, 'L);
+      allL( {`0`}, 'L);
+      allL( {`0`}, 'L);
+      hideL(-1);
+      implyL('L);
+      <(
+        hideR(1);
+        hideL(-3);
+        hideL(-3);
+        QE
+        ,
+        hideL(-1);
+        hideL(-2);
+        QE
+      )
+    ,
+    print({`1.2`});
+      andR('R);
+      <(
+        print({`1.2.1`});
+          implyR(1);
+          print({`substTactic0`});
+          allL( {`(r-rp)/rv`}, 'L);
+          allL( {`(r-rp)`}, 'L);
+          allL( {`(w * aM) / 2 * (r-rp)^2/rv^2 + dhd * (r-rp)/rv`}, 'L);
+          implyL('L);
+          <(
+            print({`a`});
+              andR('R);
+              doall(QE);
+            ,
+            print({`b`});
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE;
+          )
+        ,
+        print({`1.2.2`});
+          implyR('R);
+          orR(1);
+          hideR('R=={`rv=0`});
+          print({`1.2.2`});
+          allL( {`(r-rp)/rv`}, 'L);
+          allL( {`(r-rp)`}, 'L);
+          allL( {`(dhd+w*maxAbbrv)*(r-rp)/rv-w*maxAbbrv^2/(2*aM)`}, 'L);
+          implyL('L);
+          <(
+            print({` a `});
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE
+            ,
+            print({` b `});
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE
+          )
+      )
+  )
+
+
+
+def tac1()
+
+  implyR(1);
+  andR('R);
+  <(
+    print({`1.1`});
+      implyR(1);
+      print({`1.1`});
+      allL( {`0`}, 'L);
+      allL( {`0`}, 'L);
+      allL( {`0`}, 'L);
+      hideL(-1);
+      implyL('L);
+      <(
+        hideR(1);
+        hideL(-3);
+        QE
+        ,
+        hideL(-1);
+        hideL(-2);
+        QE
+      )
+    ,
+    print({`1.2`});
+      andR('R);
+      <(
+        print({`1.2.1`});
+          implyR(1);
+          print({`substTactic0`});
+          allL( {`(r-rp)/rv`}, 'L);
+          allL( {`(r-rp)`}, 'L);
+          allL( {`(w * aM) / 2 * (r-rp)^2/rv^2 + dhd * (r-rp)/rv`}, 'L);
+          implyL('L);
+          <(
+            print({`a`});
+              andR('R);
+              doall(QE);
+            ,
+            print({`b`});
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE;
+          )
+        ,
+        print({`1.2.2`});
+          andR(1);
+          <(
+            print({`__0__`});
+              implyR(1);
+              print({`substTactic1`});
+              allL( {`(r+rp)/rv`}, 'L);
+              allL( {`(r+rp)`}, 'L);
+              allL( {`(w * aM) / 2 * (r+rp)^2/rv^2 + dhd * (r+rp)/rv`}, 'L);
+              implyL('L);
+              <(
+                print({`__01__`});
+                  hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                  QE;
+                ,
+                print({`__02__`});
+                  orL('L);
+                  onall(QE);
+              )
+            ,
+            print({`__1__`});
+              andR('R);
+              <(
+                print({`x`});
+                  implyR('R);
+                  orR('R);
+                  hideR('R=={`rv=0&r>rp`});
+                  print({``});
+                  allL( {`(r+rp)/rv`}, 'L);
+                  allL( {`(r+rp)`}, 'L);
+                  allL( {`(dhd+w*maxAbbrv)*(r+rp)/rv-w*maxAbbrv^2/(2*aM)`}, 'L);
+                  implyL('L); onall(print({`a`}); hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`}); QE)
+                ,
+                print({`y`});
+                  implyR('R);
+                  orR('R);
+                  orR('R);
+                  andR('R=={`(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+                  <(
+                    print({`T`});
+                      print({`T`});
+                      allL( {`tl-to`}, 'L);
+                      allL( {`rv*(tl-to)`}, 'L);
+                      allL( {`(dhd+w*maxAbbrv)*(tl-to)-w*maxAbbrv^2/(2*aM)`}, 'L);
+                      implyL('L);
+                      <(
+                        print({` a `});
+                          hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                          QE
+                        ,
+                        print({`b`});
+                          hideR('R=={`rv=0&r>rp`});
+                          implyR('R=={`maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp`});
+                          andL('L=={`(hp>0&rp>=0&rv>=0&aM>0)&(w=-1|w=1)&(to<=tl|tl < 0)`});
+                          andL('L=={`(w=-1|w=1)&(to<=tl|tl < 0)`});
+                          orL('L=={`(to<=tl|tl < 0)`});
+                          <(
+                            orL('L=={`abs(r-rv*(tl-to))>rp|w*h>w*((dhd+w*maxAbbrv)*(tl-to)-w*maxAbbrv^2/(2*aM))+hp`});
+                            <(
+                              print({`bug`});
+                                QE
+                              ,
+                              QE
+                            )
+                            ,
+                            QE
+                          )
+                      )
+                    ,
+                    print({`TT`});
+                      print({`TT`});
+                      allL( {`tl-to`}, 'L);
+                      allL( {`rv*(tl-to)`}, 'L);
+                      allL( {`w*aM/2*(tl-to)^2+dhd*(tl-to)`}, 'L);
+                      implyL('L);
+                      <(
+                        print({` a `});
+                          hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                          QE
+                        ,
+                        print({` b `});
+                          hideR('R=={`rv=0&r>rp`});
+                          implyR('R=={`maxAbbrv/aM > (tl-to) -> w * h > aM/2 * (tl-to)^2 + w * dhd * (tl-to) + hp`});
+                          andL('L=={`(hp>0&rp>=0&rv>=0&aM>0)&(w=-1|w=1)&(to<=tl|tl < 0)`});
+                          andL('L=={`(w=-1|w=1)&(to<=tl|tl < 0)`});
+                          orL('L=={`(to<=tl|tl < 0)`});
+                          <(
+                            orL('L=={`abs(r-rv*(tl-to))>rp|w*h>w*(w*aM/2*(tl-to)^2+dhd*(tl-to))+hp`});
+                            <(
+                              print({`bug`});
+                                QE
+                              ,
+                              QE
+                            )
+                            ,
+                            QE
+                          )
+                      )
+                  )
+              )
+          )
+      )
+  )
+
+
+def tac1rv0()
+
+  implyR(1);
+  andR('R);
+  <(
+    print({`1.1`});
+      print({`1.1`});
+      allL( {`0`}, 'L);
+      allL( {`0`}, 'L);
+      allL( {`0`}, 'L);
+      hideL(-1);
+      QE
+    ,
+    print({`1.2`});
+      andR('R);
+      <(
+        print({`A`});
+          hideL('L)*;
+          QE
+        ,
+        print({`B`});
+          andR('R);
+          <(
+            print({`X`});
+              hideL('L)*;
+              QE
+            ,
+            print({`Y`});
+              andR('R);
+              <(
+                print({`I`});
+                  implyR(1);
+                  hideL(-1);
+                  QE
+                ,
+                print({`II`});
+                  implyR(1);
+                  cut({`maxAbbrv > aM*(tl-to) | maxAbbrv <= aM*(tl-to)`});
+                  <(
+                    orL('L=={`maxAbbrv > aM*(tl-to) | maxAbbrv <= aM*(tl-to)`});
+                    <(
+                      print({` i `});
+                        print({` i `});
+                        allL( {`tl-to`}, 'L);
+                        allL( {`0`}, 'L);
+                        allL( {`w*aM/2*(tl-to)^2+dhd*(tl-to)`}, 'L);
+                        andL('L)*;
+                        QE /*ATTENTION*/
+                      ,
+                      print({` ii `});
+                        print({` ii `});
+                        allL( {`tl-to`}, 'L);
+                        allL( {`0`}, 'L);
+                        allL( {`(dhd+w*maxAbbrv)*(tl-to)-w*maxAbbrv^2/(2*aM)`}, 'L);
+                        andL('L)*;
+                        QE
+                    )
+                    ,
+                    print({`SHOWCUT`});
+                  )
+              )
+          )
+      )
+  )
+
+
+def tac2rv0()
+
+  implyR(1);
+  andR('R);
+  <(
+    print({`2.1`});
+      implyR(1);
+        print({`2.1`});
+        allL( {`0`}, 'L);
+        allL( {`0`}, 'L);
+        allL( {`0`}, 'L);
+        implyL('L);
+        <(
+          print({`___0___`});
+            hideL(-1);
+            QE
+          ,
+          print({`___1___`});
+            hideL(-1);
+            QE
+        )
+    ,
+    print({`2.2`});
+      andR('R);
+      <(
+        print({`___0___`});
+          hideL('L)*;
+          QE
+        ,
+        print({`___1___`});
+          hideL(-1);
+          QE
+      )
+  )
+
+
+def parabolaInfT()
+
+  (andL('L)*);
+  hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+  QE
+
+
+def nestedcutsQE1()
+
+  cut({`rp < r&r<=rp+rv*maxAbbrv/aM->w*rv^2*h>aM/2*(r-rp)^2+w*rv*dhd*(r-rp)+rv^2*hp`});
+  <(
+
+    ,
+    print({`SHOWCUT`})
+  )
+
+
+def lineTl()
+
+  andL('L)*;
+  hideL('L=={`rp < r&r<=rp+rv*maxAbbrv/aM&(r<=rp+rv*(tl-to)|tl < 0)->w*rv^2*h>aM/2*(r-rp)^2+w*rv*dhd*(r-rp)+rv^2*hp`});
+  hideL('L=={`-rp<=r&r < -rp+rv*maxAbbrv/aM&(r<=-rp+rv*(tl-to)|tl < 0)->w*rv^2*h>aM/2*(r+rp)^2+w*rv*dhd*(r+rp)+rv^2*hp`});
+  hideL('L=={`o<=tl|tl < 0`});
+  hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+  doall(orL('L))*;
+  doall(QE)
+
+
+def parabolaTl()
+
+  hideL('L=={`to<=tl|tl < 0`});
+    cut({`aM*(tl-to) < maxAbbrv | aM*(tl-to) >= maxAbbrv`});
+    <(
+      or('L=={`aM*(tl-to) < maxAbbrv | aM*(tl-to) >= maxAbbrv`});
+      <(
+        print({`a`});
+          implyL('L=={`-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to)->tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+          <(
+            print({`hard`});
+              hideL('L=={`-rp+rv*maxAbbrv/aM<=r&(r < -rp+rv*(tl-to)|tl < 0)->w*rv*h>w*(dhd+w*maxAbbrv)*(r+rp)-rv*maxAbbrv^2/(2*aM)+rv*hp`});
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE /*atomicQE(ArithmeticLibrary.varEliminationLeft("w".asVariable))*/
+            ,
+            orL('L=={`tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+            <(
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE /*atomicQE(ArithmeticLibrary.varEliminationLeft("w".asVariable))*/
+              ,
+              hideL('L)*;
+              hideL('L=={`-rp+rv*maxAbbrv/aM<=r&(r < -rp+rv*(tl-to)|tl < 0)->w*rv*h>w*(dhd+w*maxAbbrv)*(r+rp)-rv*maxAbbrv^2/(2*aM)+rv*hp`});
+              hideL('L=={`(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)`});
+              hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+              QE /*atomicQE(ArithmeticLibrary.varEliminationLeft("w".asVariable))*/
+            )
+          )
+      ,
+      print({`b`});
+        hideL('L=={`t<=tl-to`});
+        implyL('L=={`-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to)->tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+        <(
+          print({`hard`});
+            nestedcutsQE1();
+            print({`hard DONE`})
+          ,
+          orL('L=={`tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+          <(
+            hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+            QE /*atomicQE(ArithmeticLibrary.varEliminationLeft("w".asVariable))*/
+            ,
+            andL('L)*;
+            nestedcutsQE;
+            print({`hard 2 DONE`});
+          )
+        )
+    )
+    ,
+    print({`SHOWCUT`})
+  )
+
+
+def lineInfT()
+
+  andL('L)*;
+  QE /*atomicQE(ArithmeticLibrary.varEliminationLeft("w".asVariable))*/
+
+
+def rvp()
+
+  print({`rv>0`});
+  equivR('R);
+  <(
+    print({`(->)`});
+      allR(1);
+      allR(1);
+      allR(1);
+      implyR(1);
+      cut({`w*(dhd+w*maxAbbrv)<=0 | w*(dhd+w*maxAbbrv) > 0`});
+      <(
+        orL('L=={`w*(dhd+w*maxAbbrv)<=0 | w*(dhd+w*maxAbbrv) > 0`});
+        <(
+          print({`___T1___`});
+            andL('L)*;
+            orL('L=={`0<=t&t < maxAbbrv/aM&ro=rv*t&ho=w*aM/2*t^2+dhd*t|t>=maxAbbrv/aM&ro=rv*t&ho=(dhd+w*maxAbbrv)*t-w*maxAbbrv^2/(2*aM)`});
+            <(
+              print({`parabola`});
+                hideL('L=={`rp+rv*maxAbbrv/aM < r&(r<=rp+rv*(tl-to)|tl < 0)->w*rv*h>w*(dhd+w*maxAbbrv)*(r-rp)-rv*maxAbbrv^2/(2*aM)+rv*hp`});
+                orL('L=={`t<=tl-to|tl < 0`});
+                <(
+                  print({` i `});
+                    hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                    QE
+                  ,
+                  print({` i `});
+                    hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                    QE
+                )
+              ,
+              print({`line`});
+                orL('L=={`t<=tl-to|tl < 0`});
+                <(
+                  print({` i `});
+                    lineTl
+                  ,
+                  print({` ii `});
+                    hideL('L=={`-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to)->tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+                    hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                    lineInfT
+                )
+            )
+          ,
+          print({`___T2___`});
+            andL('L)*;
+            orL('L=={`0<=t&t < maxAbbrv/aM&ro=rv*t&ho=w*aM/2*t^2+dhd*t|t>=maxAbbrv/aM&ro=rv*t&ho=(dhd+w*maxAbbrv)*t-w*maxAbbrv^2/(2*aM)`});
+            <(
+              print({`parabola`});
+                orL('L=={`t<=tl-to|tl < 0`});
+                <(
+                  print({` i `});
+                    parabolaTl
+                  ,
+                  print({` ii `});
+                    hideL('L=={`-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to)->tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+                    parabolaInfT
+                )
+              ,
+              print({`line`});
+                orL('L=={`t<=tl-to|tl < 0`});
+                <(
+                  print({` i `});
+                    lineTl
+                  ,
+                  print({` ii `});
+                    hideL('L=={`-rp+rv*(tl-to)<=r&r<=rp+rv*(tl-to)->tl < 0|(maxAbbrv/aM<=tl-to->w*h>w*(dhd+w*maxAbbrv)*(tl-to)-maxAbbrv^2/(2*aM)+hp)&(maxAbbrv/aM>tl-to->w*h>aM/2*(tl-to)^2+w*dhd*(tl-to)+hp)`});
+                    hideL('L=={`maxAbbrv=max((0,w*(dhfM-dhd)))`});
+                    lineInfT
+                )
+            )
+        )
+        ,
+        print({`SHOWCUT`})
+      )
+    ,
+    print({`(<-)`});
+      andR('R);
+      <(
+        print({`___R1___`});
+          tac1
+        ,
+        print({`___R2___`});
+          tac2
+      )
+  )
+
+
+def rv0()
+
+  /*exhaustiveEqL2R(hide=true)('L, "rv=0".asFormula)*/
+  equivR('R);
+  <(
+    print({`(->)`});
+      allR(1);
+      allR(1);
+      allR(1);
+      implyR(1);
+      andL(-4);
+      cut({`w*(dhd+w*maxAbbrv)<=0 | w*(dhd+w*maxAbbrv)>0`});
+      <(
+        orL('L=={`w*(dhd+w*maxAbbrv)<=0 | w*(dhd+w*maxAbbrv)>0`});
+        <(
+          print({`__R1__`});
+            QE
+          ,
+          print({`__R2__`});
+            andL('L)*
+            onall(orL('L)*);
+            onall(print({`__R2__ QE`}); QE)
+        )
+        ,
+        print({`SHOWCUT`})
+      )
+    ,
+    print({`(<-)`});
+      andR('R);
+      <(
+        print({`___ R1 ___`});
+          tac1rv0
+        ,
+        print({`___ R2 ___`});
+          tac2rv0
+      )
+  )
+
+
+
+  def allTRoHoL(caseName: String, tInst: String, roInst: String, hoInst: String): BelleExpr =
+    dT(caseName) &
+    allL("t".asVariable, tInst.asTerm)('L) &
+    allL("ro".asVariable, roInst.asTerm)('L) &
+    allL("ho".asVariable, hoInst.asTerm)('L) &
+    dT(s"$caseName Inst")
+
+
+
+
+*/
